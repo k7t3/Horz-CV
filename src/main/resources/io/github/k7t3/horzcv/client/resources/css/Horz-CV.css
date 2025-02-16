@@ -1,0 +1,55 @@
+body > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 100%;
+}
+
+#content {
+  flex-grow: 1;
+}
+
+/** ChatList Page*/
+#chatList {
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  justify-content: stretch;
+  padding: 4mm;
+  gap: 2mm;
+}
+
+/** Embedded Chat & Minimize Button*/
+#chatList > .chatContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.inputLiveStream {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: top;
+}
+
+.chatContainer > span {
+  flex-grow: 1;
+}
+
+.chatFrame {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 8px;
+}
+
+/** Youtube Live Chat*/
+.youtube {
+  border: 1mm solid #c4302b;
+}
+
+/** Twitch Live Chat*/
+.twitch {
+  border: 1mm solid #6441a5;
+}

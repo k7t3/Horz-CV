@@ -1,0 +1,124 @@
+plugins {
+    id 'java'
+    // https://gwt-gradle.docstr.org/latest/Configuration
+    id "org.docstr.gwt" version "2.1.6"
+    id 'org.gretty' version '4.1.6'
+}
+
+
+import com.google.gwt.core.ext.ServletContainer
+import org.akhikhl.gretty.AppStartTask
+
+group = 'io.github.k7t3'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility =  JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    implementation 'com.github.gwtmaterialdesign:gwt-material:2.8.3'
+    implementation 'com.github.gwtmaterialdesign:gwt-material-themes:2.8.3'
+
+    // GWTがJUnit5をサポートしていないためJUnit4を使用する
+    testImplementation 'junit:junit:4.13.2'
+}
+
+// コンパイル後にアプリケーションに必要な静的ファイルをコピーする処理をフック
+tasks.named('gwtCompile') {
+    doLast {
+        copy {
+            from 'src/main/webapp'
+            into 'build/webapp/horzcv'
+        }
+    }
+}
+
+// テスト用のアプリケーションを起動するタスク
+tasks.register('runDevApp', AppStartTask) {
+    dependsOn 'gwtDevMode'
+}
+
+gretty {
+    contextPath = 'build/webapp/horzcv'
+    //serverConfigFile = 'build/war/horzcv/WEB-INF/web.xml'
+    servletContainer = 'tomcat10'
+    httpPort = 8080
+    fastReload = false
+}
+
+gwt {
+    gwtVersion = '2.12.1'
+    modules = [ 'io.github.k7t3.horzcv.HorzCV' ]
+
+    sourceLevel = '17'
+
+    // Optional: Compiles faster by reusing data from the previous compile. (defaults to OFF)
+    incremental = false
+
+    // Optional: The directory into which deployable output files will be written (defaults to 'build/gwt')
+    war = file('build/war')
+
+    // Optional: The directory into which deployable but not servable output files will be written (defaults to 'build/deploy')
+    deploy = file('build/deploy')
+
+    // Optional: The directory into which extra files, not intended for deployment, will be written
+    extra = file('build/extra')
+
+
+    // Optional: Configures the GWT compiler
+    compiler {
+        //
+        // All options in 'gwt' closure (except 'gwtVersion') can be overridden here
+        //
+
+        // Optional: Sets the optimization level used by the compiler (0=none, 9=maximum)
+        optimize = 9
+
+        // Optional: Enables Javascript output suitable for post-compilation by Closure Compiler (defaults to OFF)
+        closureFormattedOutput = true
+
+        // Optional: Compile a report that tells the "Story of Your Compile" (defaults to OFF)
+        compileReport = true
+
+        draftCompile = true
+    }
+
+
+    // Optional: Configures the GWT development mode
+    devMode {
+        //
+        // All options in 'gwt' closure (except 'gwtVersion') can be overridden here
+        //
+
+        // Optional: Specifies the bind address for the code server and web server (defaults to 127.0.0.1)
+        bindAddress = '127.0.0.1'
+
+        // Optional: Specifies the TCP port for the code server (defaults to 9997 for classic Dev Mode or 9876 for Super Dev Mode)
+        codeServerPort = 9876
+
+        // 埋め込みのサーバーは使用せずにgrettyで起動する
+        startServer = false
+
+        // grettyで起動するサーバーのURL
+        startupUrl = 'http://localhost:8080/build/webapp/horzcv'
+    }
+
+    // Optional: Configures the GWT test runner
+    gwtTest {
+
+        // Optional: To specify which test tasks should have GWT test enabled, default to empty list, which is interpreted to mean all tasks of type {@link org.gradle.api.tasks.testing.Test Test}
+        testTasks = [ "test" ]
+
+    }
+
+}
+
+test {
+    useJUnit()
+}
