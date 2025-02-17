@@ -9,7 +9,7 @@ public class TwitchChannelDetector extends LiveStreamValidator {
     private static final RegExp TWITCH_CHANNEL_REGEX = RegExp.compile("(?<=www.twitch.tv/)[^/]+$");
 
     public TwitchChannelDetector() {
-        super("https://www.twitch.tv/.+", "Invalid Twitch Channel URL");
+        super("https://www.twitch.tv/.+");
     }
 
     @Override

@@ -5,6 +5,20 @@ body > div {
   height: 100%;
 }
 
+nav .svg-inline--fa {
+  vertical-align: middle;
+}
+
+#nav-bar {
+  padding: 0px 45px;
+}
+
+#nav-bar > .nav-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 #content {
   flex-grow: 1;
 }

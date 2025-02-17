@@ -1,6 +1,7 @@
 package io.github.k7t3.horzcv.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import gwt.material.design.client.theme.dark.CoreDarkThemeLoader;
 import io.github.k7t3.horzcv.client.presenter.StateControllerImpl;

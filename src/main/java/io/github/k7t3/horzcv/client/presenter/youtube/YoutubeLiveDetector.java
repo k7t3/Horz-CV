@@ -12,7 +12,7 @@ public class YoutubeLiveDetector extends LiveStreamValidator {
     private static final RegExp YOUTUBE_ID_REGEX = RegExp.compile("www\\.youtube\\.com/(?:watch\\?v=|live/)([^/&]+)");
 
     public YoutubeLiveDetector() {
-        super("https://www.youtube.com/(watch\\?v=|live/)[^/&]+", "Invalid YouTube Live URL");
+        super("https://www.youtube.com/(watch\\?v=|live/)[^/&]+");
     }
 
     @Override
