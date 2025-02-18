@@ -4,7 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import gwt.material.design.client.theme.dark.CoreDarkThemeLoader;
-import io.github.k7t3.horzcv.client.presenter.StateControllerImpl;
+import io.github.k7t3.horzcv.client.presenter.StateController;
 import io.github.k7t3.horzcv.client.view.NavigationBar;
 
 import java.util.logging.Logger;
@@ -49,7 +49,7 @@ public class App implements EntryPoint {
 		var header = RootPanel.get("header");
 		header.add(new NavigationBar());
 
-		var controller = new StateControllerImpl();
+		var controller = new StateController();
 		controller.launch();
 	}
 }

@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
  * @param service ストリーミングサービス
  * @param id ID
  */
-public record LiveStream(StreamingService service, String id) {
+public record LiveStreamingIdentity(StreamingService service, String id) {
 
-    public LiveStream {
+    public LiveStreamingIdentity {
         if (service == null) throw new IllegalArgumentException("service is null");
         if (id == null || id.isEmpty()) throw new IllegalArgumentException("id is null or empty");
     }
@@ -21,21 +21,21 @@ public record LiveStream(StreamingService service, String id) {
         return service.getType() + "=" + id;
     }
 
-    private static LiveStream fromToken(String type, String id) {
+    private static LiveStreamingIdentity fromToken(String type, String id) {
         try {
-            return new LiveStream(StreamingService.find(type), id);
+            return new LiveStreamingIdentity(StreamingService.find(type), id);
         } catch (Exception ignored) {
             return null;
         }
     }
 
-    public static String toToken(List<LiveStream> streams) {
+    public static String toToken(List<LiveStreamingIdentity> streams) {
         return streams.stream()
-                .map(LiveStream::toToken)
+                .map(LiveStreamingIdentity::toToken)
                 .collect(Collectors.joining("+"));
     }
 
-    public static List<LiveStream> fromToken(String token) {
+    public static List<LiveStreamingIdentity> fromToken(String token) {
         return Arrays.stream(token.split("\\+"))
                 .map(v -> v.split("="))
                 .filter(kv -> kv.length == 2)

@@ -3,7 +3,7 @@ package io.github.k7t3.horzcv.client.model;
 /**
  * 特定のストリーミングサービスのURLを検出するためのインターフェース。
  */
-public interface LiveStreamDetector {
+public interface LiveStreamingDetector {
 
     /**
      * 指定されたURLがこのサービスのものであるかどうかを判定するメソッド。
@@ -25,11 +25,5 @@ public interface LiveStreamDetector {
      * @return URL
      */
     String construct(String id);
-
-    /**
-     * プレースホルダーを取得するメソッド。
-     * @return プレースホルダー
-     */
-    String placeholder();
 
 }

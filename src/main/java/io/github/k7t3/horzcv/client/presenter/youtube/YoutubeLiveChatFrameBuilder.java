@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import io.github.k7t3.horzcv.client.model.EmbeddedChatFrameBuilder;
-import io.github.k7t3.horzcv.client.model.LiveStream;
 
 public class YoutubeLiveChatFrameBuilder implements EmbeddedChatFrameBuilder {
 
@@ -12,7 +11,7 @@ public class YoutubeLiveChatFrameBuilder implements EmbeddedChatFrameBuilder {
      * Youtube LIVEのチャットを埋め込むためのiframeを生成するテンプレート。
      */
     public interface YoutubeEmbeddedChatUrl extends SafeHtmlTemplates {
-        @Template("<iframe src=\"https://www.youtube.com/live_chat?v={0}&embed_domain={1}\" class=\"chatFrame youtube\"></iframe>")
+        @Template("<iframe src=\"https://www.youtube.com/live_chat?v={0}&embed_domain={1}&dark_theme=1\" class=\"chatFrame youtube\"></iframe>")
         SafeHtml template(String videoId, String host);
     }
 
@@ -25,7 +24,7 @@ public class YoutubeLiveChatFrameBuilder implements EmbeddedChatFrameBuilder {
     }
 
     @Override
-    public String build(LiveStream stream) {
-        return YOUTUBE_EMBEDDED_CHAT_TEMPLATE.template(stream.id(), host).asString();
+    public String build(String id) {
+        return YOUTUBE_EMBEDDED_CHAT_TEMPLATE.template(id, host).asString();
     }
 }

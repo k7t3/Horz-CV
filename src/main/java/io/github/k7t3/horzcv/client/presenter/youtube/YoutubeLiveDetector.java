@@ -2,9 +2,9 @@ package io.github.k7t3.horzcv.client.presenter.youtube;
 
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import io.github.k7t3.horzcv.client.presenter.LiveStreamValidator;
+import io.github.k7t3.horzcv.client.presenter.LiveStreamingValidator;
 
-public class YoutubeLiveDetector extends LiveStreamValidator {
+public class YoutubeLiveDetector extends LiveStreamingValidator {
 
     /** Youtube LIVEのビデオIDにマッチする正規表現*/
     //private static final RegExp YOUTUBE_ID_REGEX = RegExp.compile("(?<=www.youtube.com/watch\\?v=)[^&]+");
@@ -29,8 +29,4 @@ public class YoutubeLiveDetector extends LiveStreamValidator {
         return "https://www.youtube.com/watch?v=" + id;
     }
 
-    @Override
-    public String placeholder() {
-        return "https://www.youtube.com/watch?v=...";
-    }
 }

@@ -2,7 +2,7 @@ package io.github.k7t3.horzcv.client.logic;
 
 import io.github.k7t3.horzcv.client.model.EmbeddedChatFrame;
 import io.github.k7t3.horzcv.client.model.EmbeddedChatFrameBuilder;
-import io.github.k7t3.horzcv.client.model.LiveStream;
+import io.github.k7t3.horzcv.client.model.LiveStreamingEntry;
 import io.github.k7t3.horzcv.client.model.StreamingService;
 
 import java.util.ArrayList;
@@ -28,16 +28,16 @@ public class EmbeddedChatList {
         builders.put(service, builder);
     }
 
-    private EmbeddedChatFrame tryBuild(LiveStream stream) {
-        var builder = builders.get(stream.service());
+    private EmbeddedChatFrame tryBuild(LiveStreamingEntry stream) {
+        var builder = builders.get(stream.getService());
         if (builder == null) {
             return null;
         }
-        var frame = builder.build(stream);
+        var frame = builder.build(stream.getId());
         return new EmbeddedChatFrame(stream, frame);
     }
 
-    public void setAll(List<LiveStream> streams) {
+    public void setAll(List<LiveStreamingEntry> streams) {
         this.frames.clear();
         streams.stream()
                 .map(this::tryBuild)

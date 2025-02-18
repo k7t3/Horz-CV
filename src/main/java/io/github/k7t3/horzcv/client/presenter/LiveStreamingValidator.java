@@ -1,13 +1,13 @@
 package io.github.k7t3.horzcv.client.presenter;
 
 import com.google.gwt.regexp.shared.RegExp;
-import io.github.k7t3.horzcv.client.model.LiveStreamDetector;
+import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
 
-public abstract class LiveStreamValidator implements LiveStreamDetector {
+public abstract class LiveStreamingValidator implements LiveStreamingDetector {
 
     private final RegExp pattern;
 
-    public LiveStreamValidator(String pattern) {
+    public LiveStreamingValidator(String pattern) {
         this.pattern = RegExp.compile(pattern);
     }
 
