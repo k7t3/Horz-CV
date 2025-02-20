@@ -1,9 +1,25 @@
+/*
+ * Copyright 2025 k7t3
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.k7t3.horzcv.client.presenter;
 
-import com.google.gwt.user.client.ui.FormPanel;
 import gwt.material.design.client.ui.MaterialButton;
 import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialTextBox;
+import io.github.k7t3.horzcv.client.logic.DataStore;
 import io.github.k7t3.horzcv.client.logic.LiveStreamingManager;
 import io.github.k7t3.horzcv.client.model.LiveStreamingIdentity;
 import io.github.k7t3.horzcv.client.model.LiveStreamingEntry;
@@ -26,7 +42,7 @@ public class LiveStreamEditorPresenter {
     public interface Entry extends View {
         void updateService(StreamingService service);
         MaterialTextBox getUrlField();
-        MaterialTextBox getDescriptionField();
+        MaterialTextBox getDisplayNameField();
         MaterialButton getRemoveButton();
     }
 
@@ -41,12 +57,15 @@ public class LiveStreamEditorPresenter {
 
     private final LiveStreamingManager manager;
 
+    private final DataStore displayNameStore;
+
     private final Display display;
 
     private final List<Entry> items = new ArrayList<>();
 
-    public LiveStreamEditorPresenter(LiveStreamingManager manager) {
+    public LiveStreamEditorPresenter(LiveStreamingManager manager, DataStore displayNameStore) {
         this.manager = manager;
+        this.displayNameStore = displayNameStore;
         display = new LiveStreamEditorPage();
         init();
     }
@@ -68,13 +87,29 @@ public class LiveStreamEditorPresenter {
         // エディタに生の情報を設定
         manager.restoreFromIdentities(streams);
 
-        // ビューに反映
+        var entries = manager.getEntries();
+        for (var entry : entries) {
+            // データストアに表示名が保存されていた場合はそれを反映
+            if (entry.isValid()) {
+                var identity = entry.asIdentity();
+                var displayName = displayNameStore.load(identity.toToken());
+                if (displayName != null) {
+                    entry.setDisplayName(displayName);
+                }
+            }
+        }
+
+        // 現在の内容をクリア
         var container = display.getStreamsContainer();
         container.clear();
-        manager.getEntries().forEach(this::addLiveStreamingEntry);
+        items.clear();
+
+        // ビューに反映
+        entries.forEach(this::addLiveStreamingEntry);
 
         // 最低4つの入力欄を確保
-        for (var i = manager.getEntries().size(); i < 4; i++) {
+        var n = manager.getEntries().size();
+        for (var i = n; i < 4; i++) {
             var entry = new LiveStreamingEntry();
             manager.getEntries().add(entry);
             addLiveStreamingEntry(entry);
@@ -91,11 +126,11 @@ public class LiveStreamEditorPresenter {
 
             var url = item.getUrlField().getText();
             var foundService = manager.findSuitableService(url);
-            var desc = item.getDescriptionField().getText();
+            var displayName = item.getDisplayNameField().getText();
 
             model.setUrl(url);
             model.setService(foundService);
-            model.setDescription(desc);
+            model.setDisplayName(displayName);
         }
     }
 
@@ -104,6 +139,20 @@ public class LiveStreamEditorPresenter {
 
         // ビューに反映
         item.updateService(foundService);
+
+        var detector = manager.getDetector(foundService);
+        if (detector != null && detector.isValidURL(url)) {
+            var id = detector.parseId(url);
+            var identity = new LiveStreamingIdentity(foundService, id);
+            var displayName = displayNameStore.load(identity.toToken());
+            if (displayName != null) {
+                item.getDisplayNameField().setText(displayName);
+            } else {
+                item.getDisplayNameField().setText(id);
+            }
+        } else {
+            item.getDisplayNameField().setText("");
+        }
     }
 
     private void addLiveStreamingEntry(LiveStreamingEntry entry) {
@@ -115,17 +164,22 @@ public class LiveStreamEditorPresenter {
         // モデルの値をUIに反映
         item.getUrlField().setText(entry.getUrl());
         item.getUrlField().setLabel(entry.getService().getText());
+        item.getDisplayNameField().setText(entry.getDisplayName());
+
+        var urlField = item.getUrlField();
 
         // URL欄の値が変更されたらサービスを推測
-        item.getUrlField().addValueChangeHandler(e -> {
+        urlField.addValueChangeHandler(e -> {
             var url = e.getValue();
             validURL(item, url);
         });
-        item.getUrlField().addPasteHandler(e -> {
+        urlField.addPasteHandler(e -> {
             // ペースト
             var pasteUrl = e.getValue();
             validURL(item, pasteUrl);
         });
+
+        urlField.addFocusHandler(e -> urlField.select());
 
         // 削除ボタンの処理を設定
         item.getRemoveButton().addClickHandler(e -> {

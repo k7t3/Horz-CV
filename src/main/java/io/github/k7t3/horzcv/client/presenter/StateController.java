@@ -1,19 +1,35 @@
+/*
+ * Copyright 2025 k7t3
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.k7t3.horzcv.client.presenter;
 
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.History;
 import io.github.k7t3.horzcv.client.logic.EmbeddedChatList;
 import io.github.k7t3.horzcv.client.logic.LiveStreamingManager;
 import io.github.k7t3.horzcv.client.model.LiveStreamingIdentity;
-import io.github.k7t3.horzcv.client.model.LiveStreamingEntry;
 import io.github.k7t3.horzcv.client.model.StreamingService;
 import io.github.k7t3.horzcv.client.presenter.twitch.TwitchChannelChatFrameBuilder;
 import io.github.k7t3.horzcv.client.presenter.twitch.TwitchChannelDetector;
 import io.github.k7t3.horzcv.client.presenter.youtube.YoutubeLiveChatFrameBuilder;
 import io.github.k7t3.horzcv.client.presenter.youtube.YoutubeLiveDetector;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * 画面の状態コントローラー
@@ -34,7 +50,7 @@ import java.util.stream.Collectors;
  */
 public class StateController {
 
-    public static final String STORAGE_KEY = "io.github.k7t3.horzcv";
+    public static final String STORAGE_KEY = "value";
 
     private static final Logger logger = Logger.getLogger(StateController.class.getName());
     private final LiveStreamingManager editor = new LiveStreamingManager();
@@ -43,14 +59,23 @@ public class StateController {
     private final LiveStreamEditorPresenter editorPresenter;
     private final EmbeddedChatPresenter chatListPresenter;
 
+    private final WebStorageDataStore displayNameStore = new WebStorageDataStore(
+            "horzcv.displayname",
+            new GWTWebStorage(Storage.getLocalStorageIfSupported())
+    );
+    private final WebStorageDataStore tokenStore = new WebStorageDataStore(
+            "horzcv.token",
+            new GWTWebStorage(Storage.getSessionStorageIfSupported())
+    );
+
     public StateController() {
         editor.registerDetector(StreamingService.YOUTUBE, new YoutubeLiveDetector());
         editor.registerDetector(StreamingService.TWITCH, new TwitchChannelDetector());
         chatList.registerBuilder(StreamingService.YOUTUBE, new YoutubeLiveChatFrameBuilder("localhost"));
         chatList.registerBuilder(StreamingService.TWITCH, new TwitchChannelChatFrameBuilder("localhost"));
 
-        editorPresenter = new LiveStreamEditorPresenter(editor);
-        chatListPresenter = new EmbeddedChatPresenter(chatList);
+        editorPresenter = new LiveStreamEditorPresenter(editor, displayNameStore);
+        chatListPresenter = new EmbeddedChatPresenter(chatList, displayNameStore);
 
         // 履歴トークンがユーザーによって変更されたときの処理を登録
         History.addValueChangeHandler(e -> {
@@ -62,6 +87,10 @@ public class StateController {
         editorPresenter.getDisplay().getSubmitButton().addClickHandler(e -> {
             submit();
         });
+
+        // データストアを初期化
+        displayNameStore.initialize();
+        // tokenStore.initialize(); // セッションは初期化不要
 
         logger.info("StateController initialized");
     }
@@ -89,6 +118,17 @@ public class StateController {
             // チャットリストで表示するストリーミング情報を復元
             editor.restoreFromIdentities(identities);
 
+            for (var entry : editor.getEntries()) {
+                // データストアに表示名が保存されていた場合はそれを反映
+                if (entry.isValid()) {
+                    var identity = entry.asIdentity();
+                    var displayName = displayNameStore.load(identity.toToken());
+                    if (displayName != null) {
+                        entry.setDisplayName(displayName);
+                    }
+                }
+            }
+
             // チャットリストを表示
             showChatList();
         }
@@ -101,9 +141,9 @@ public class StateController {
 
     private void showLandingPage() {
         // セッションに保存されるストリームの一覧を取得
-        var streams = loadLiveIdentities();
+        var identities = loadLiveIdentities();
 
-        editorPresenter.setInputItems(streams);
+        editorPresenter.setInputItems(identities);
 
         // ページを表示
         editorPresenter.getDisplay().show();
@@ -125,7 +165,7 @@ public class StateController {
 
     private List<LiveStreamingIdentity> loadLiveIdentities() {
         List<LiveStreamingIdentity> streams;
-        var token = StorageAPI.loadSessionValue(STORAGE_KEY);
+        var token = tokenStore.load(STORAGE_KEY);
         if (token != null) {
             streams = LiveStreamingIdentity.fromToken(token);
         } else {
@@ -145,15 +185,26 @@ public class StateController {
         if (entries.isEmpty()) {
             return;
         }
-        
-        var streams = entries.stream()
-                .map(LiveStreamingEntry::asIdentity)
-                .collect(Collectors.toList());
 
-        var token = LiveStreamingIdentity.toToken(streams);
+        // 入力された情報をサービスごとのエントリに変換
+        var identities = new ArrayList<LiveStreamingIdentity>(entries.size());
+        for (var entry : entries) {
+            var identity = entry.asIdentity();
+
+            // 表示名が設定されている場合は保存
+            var displayName = entry.getDisplayName();
+            if (displayName != null) {
+                displayNameStore.store(identity.toToken(), displayName);
+            } else {
+                displayNameStore.remove(identity.toToken());
+            }
+
+            identities.add(identity);
+        }
 
         // ストレージにトークンを保存
-        StorageAPI.storeSessionValue(STORAGE_KEY, token);
+        var token = LiveStreamingIdentity.toToken(identities);
+        tokenStore.store(STORAGE_KEY, token);
 
         // トークンを履歴に追加するがイベントは発行しない
         var encoded = History.encodeHistoryToken(token);

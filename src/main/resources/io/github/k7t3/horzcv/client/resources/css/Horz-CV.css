@@ -1,4 +1,4 @@
-body > div {
+body > #root-div {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -19,6 +19,14 @@ nav .svg-inline--fa {
   align-items: center;
 }
 
+.brand-logo > div {
+  font-family: 'Impact';
+}
+
+.copyright {
+  font-family: monospace;
+}
+
 #content {
   flex-grow: 1;
 }
@@ -29,8 +37,8 @@ nav .svg-inline--fa {
   height: 100%;
   flex-direction: row;
   justify-content: stretch;
-  padding: 4mm;
-  gap: 2mm;
+  padding: 2mm 1mm;
+  gap: 1mm;
 }
 
 /** Embedded Chat & Minimize Button*/
@@ -39,6 +47,14 @@ nav .svg-inline--fa {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
+}
+
+/** Remove margin from chat display name editor */
+.chatDisplayName {
+  margin-top: 0px;
+}
+.chatDisplayName > input {
+  margin-bottom: 0px !important;
 }
 
 .inputLiveStream {

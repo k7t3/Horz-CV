@@ -16,10 +16,17 @@
 
 package io.github.k7t3.horzcv.client.view;
 
-import com.google.gwt.user.client.ui.Widget;
+public class Constants {
 
-public interface View {
+    public static final String PROJECT_PAGE = "https://github.com/k7t3/Horz-CV";
 
-    Widget getRoot();
+    public static final String COPYRIGHT = "© 2025 Copyright k7t3";
+
+    public static final String YOUTUBE = "https://www.youtube.com/";
+
+    public static final String TWITCH = "https://www.twitch.tv/";
+
+    private Constants() {
+    }
 
 }

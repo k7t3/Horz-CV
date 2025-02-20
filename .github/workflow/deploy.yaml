@@ -1,0 +1,44 @@
+name: Deployment
+
+on:
+  push:
+    tags:
+      # ドットをエスケープしなくていい(正規表現でない)
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build GWT
+        run: ./gradlew gwtCompileForDeploy
+
+      - name: Upload static files as artifact
+        id: upload
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/gwt/js/
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.upload.outputs.page_url }}
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

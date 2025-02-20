@@ -53,7 +53,7 @@ gwt {
         //
 
         // Optional: Sets the optimization level used by the compiler (0=none, 9=maximum)
-        optimize = 0
+        optimize = 9
 
         // Optional: Enables Javascript output suitable for post-compilation by Closure Compiler (defaults to OFF)
         closureFormattedOutput = true
@@ -63,7 +63,7 @@ gwt {
 
         draftCompile = true
 
-        compiler.style = 'PRETTY'
+        compiler.style = 'OBFUSCATED'
     }
 
 
@@ -82,7 +82,7 @@ gwt {
         // grettyで起動するサーバーのURL
         startupUrl = 'http://localhost:8080/'
 
-        devMode.style = 'PRETTY'
+        devMode.style = 'OBFUSCATED'
 
         devMode.generateJsInteropExports = true
     }
@@ -135,6 +135,18 @@ tasks.named('gwtCompile') {
         copy {
             from 'src/main/webapp'
             into layout.buildDirectory.dir('gwt/js')
+        }
+    }
+}
+
+tasks.register('gwtCompileForDeploy') {
+    dependsOn gwtCompile
+
+    doLast {
+        // 開発モードのファイルを削除
+        def devFile = gwt.war.get().dir('horzcv').file('horzcv.devmode.js').asFile
+        if (devFile.exists()) {
+            devFile.delete()
         }
     }
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2025 k7t3
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.github.k7t3.horzcv.client.view;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -7,7 +23,6 @@ import gwt.material.design.client.constants.FieldType;
 import gwt.material.design.client.constants.IconType;
 import gwt.material.design.client.ui.MaterialButton;
 import gwt.material.design.client.ui.MaterialColumn;
-import gwt.material.design.client.ui.MaterialPanel;
 import gwt.material.design.client.ui.MaterialRow;
 import gwt.material.design.client.ui.MaterialTextBox;
 import io.github.k7t3.horzcv.client.model.StreamingService;
@@ -20,7 +35,7 @@ public class InputLiveStreamView extends MaterialRow implements LiveStreamEditor
 
     private final MaterialTextBox url = new MaterialTextBox();
 
-    private final MaterialTextBox description = new MaterialTextBox();
+    private final MaterialTextBox displayName = new MaterialTextBox();
 
     private final MaterialButton removeButton = new MaterialButton("", IconType.CLEAR, ButtonType.FLOATING);
 
@@ -32,15 +47,11 @@ public class InputLiveStreamView extends MaterialRow implements LiveStreamEditor
         //setClass("inputLiveStream");
 
         // エディタの設定
-        url.setFieldType(FieldType.ALIGNED_LABEL);
         url.setLabel("Service");
-//        url.setValidateOnBlur(true);
-//        url.setAllowBlank(true);
-//        url.setFlexGrow(1);
 
         // 表示名を入力するテキストボックスの設定
-        description.setPlaceholder("Display Name(Optional)");
-        //description.setTooltip("Display Name");
+        displayName.setPlaceholder("Display Name(Optional)");
+        displayName.setTooltip("Display Name");
 
         // 削除ボタンの設定
         removeButton.setTabIndex(-1); // タブでフォーカスされないようにする
@@ -49,16 +60,19 @@ public class InputLiveStreamView extends MaterialRow implements LiveStreamEditor
         removeButton.setBackgroundColor(Color.TRANSPARENT);
         removeButton.setIconColor(Color.RED);
         removeButton.setCircle(true);
+        removeButton.setInitialClasses("input-field");
 
 //        add(url);
 //        add(removeButton);
 
         var urlColumn = new MaterialColumn(12, 12, 8);
-        var descColumn = new MaterialColumn(11, 11, 3);
+        var descColumn = new MaterialColumn(11, 5, 3);
         var removeColumn = new MaterialColumn(1, 1, 1);
 
+        descColumn.setOffset("m6");
+
         urlColumn.add(url);
-        descColumn.add(description);
+        descColumn.add(displayName);
         removeColumn.add(removeButton);
 
         add(urlColumn);
@@ -88,8 +102,8 @@ public class InputLiveStreamView extends MaterialRow implements LiveStreamEditor
     }
 
     @Override
-    public MaterialTextBox getDescriptionField() {
-        return description;
+    public MaterialTextBox getDisplayNameField() {
+        return displayName;
     }
 
     @Override
