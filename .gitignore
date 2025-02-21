@@ -5,13 +5,15 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
-.idea/
+.idea/*
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+!.idea/copyright
+!.idea/scopes
 
 ### Eclipse ###
 .apt_generated
