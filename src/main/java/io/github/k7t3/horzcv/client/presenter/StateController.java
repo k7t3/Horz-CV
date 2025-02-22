@@ -18,6 +18,7 @@ package io.github.k7t3.horzcv.client.presenter;
 
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import io.github.k7t3.horzcv.client.logic.EmbeddedChatList;
 import io.github.k7t3.horzcv.client.logic.LiveStreamingManager;
 import io.github.k7t3.horzcv.client.model.LiveStreamingIdentity;
@@ -71,8 +72,8 @@ public class StateController {
     public StateController() {
         editor.registerDetector(StreamingService.YOUTUBE, new YoutubeLiveDetector());
         editor.registerDetector(StreamingService.TWITCH, new TwitchChannelDetector());
-        chatList.registerBuilder(StreamingService.YOUTUBE, new YoutubeLiveChatFrameBuilder("localhost"));
-        chatList.registerBuilder(StreamingService.TWITCH, new TwitchChannelChatFrameBuilder("localhost"));
+        chatList.registerBuilder(StreamingService.YOUTUBE, new YoutubeLiveChatFrameBuilder(Window.Location.getHost()));
+        chatList.registerBuilder(StreamingService.TWITCH, new TwitchChannelChatFrameBuilder(Window.Location.getHost()));
 
         editorPresenter = new LiveStreamEditorPresenter(editor, displayNameStore);
         chatListPresenter = new EmbeddedChatPresenter(chatList, displayNameStore);

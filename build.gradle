@@ -55,9 +55,6 @@ gwt {
         // Optional: Sets the optimization level used by the compiler (0=none, 9=maximum)
         optimize = 9
 
-        // Optional: Enables Javascript output suitable for post-compilation by Closure Compiler (defaults to OFF)
-        closureFormattedOutput = true
-
         // Optional: Compile a report that tells the "Story of Your Compile" (defaults to OFF)
         compileReport = true
 
@@ -148,6 +145,11 @@ tasks.register('gwtCompileForDeploy') {
         if (devFile.exists()) {
             devFile.delete()
         }
+
+        // サーブレットコンテナ向けのファイルを削除
+        def webInf = gwt.war.dir('WEB-INF').get()
+        webInf.file('web.xml').asFile.delete()
+        webInf.asFile.delete()
     }
 }
 
