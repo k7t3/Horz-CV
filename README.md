@@ -1,11 +1,16 @@
 # Horz CV
 
-**Horz CV**は、[Twitch](https://www.twitch.tv/)や[Youtube Live](https://www.youtube.com/)の
-ストリーミングサービスが提供するチャットを最大6つまで同時に表示できるアプリケーションです。  
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-任意のストリーミングのURLを入力し、送信することでそれらのチャットが表示されます。
+**Horz CV**は、[Twitch](https://www.twitch.tv/)や[Youtube Live](https://www.youtube.com/)などの
+ストリーミングサービスが提供するライブ配信のチャットを、最大6つまで同時に表示できるアプリケーションです。  
+
+任意のライブ配信のURLを入力し、送信することでそれらのチャットが表示されます。
 
 ## スクリーンショット
+
+<img src="image/top.png" width="1280" alt="Horz CV">
+<img src="image/chats.png" width="1280" alt="Horz CV Chats">
 
 ## License
 
