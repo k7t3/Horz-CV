@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.model;
+package io.github.k7t3.horzcv.client.view.ui;
 
-public interface EmbeddedChatFrameBuilder {
+public class Ids {
 
-    String build(String id, boolean isDarkMode);
+    public static final String TITLE_ID = "nav-title-id";
 
 }

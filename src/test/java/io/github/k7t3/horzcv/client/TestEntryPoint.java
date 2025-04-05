@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.model;
+package io.github.k7t3.horzcv.client;
 
-public interface EmbeddedChatFrameBuilder {
+import com.google.gwt.core.client.EntryPoint;
 
-    String build(String id, boolean isDarkMode);
+public class TestEntryPoint implements EntryPoint {
+
+    @Override
+    public void onModuleLoad() {
+        // This is a placeholder for the test entry point.
+        // You can add any test-specific initialization code here.
+        System.out.println("TestEntryPoint loaded");
+    }
 
 }

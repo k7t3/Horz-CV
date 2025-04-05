@@ -30,8 +30,9 @@ public class TwitchChannelChatFrameBuilder implements EmbeddedChatFrameBuilder {
      * </p>
      */
     public interface TwitchEmbeddedChatUrl extends SafeHtmlTemplates {
-        @Template("<iframe src=\"https://www.twitch.tv/embed/{0}/chat?parent={1}&darkpopout\" class=\"chatFrame twitch\"></iframe>")
-        SafeHtml template(String channel, String host);
+        @Template("<iframe src=\"https://www.twitch.tv/embed/{0}/chat?parent={1}{2}\"" +
+                "class=\"chatFrame twitch\"></iframe>")
+        SafeHtml template(String channel, String host, String darkMode);
     }
 
     private static final TwitchEmbeddedChatUrl TWITCH_EMBEDDED_CHAT_TEMPLATE = GWT.create(TwitchEmbeddedChatUrl.class);
@@ -43,7 +44,8 @@ public class TwitchChannelChatFrameBuilder implements EmbeddedChatFrameBuilder {
     }
 
     @Override
-    public String build(String id) {
-        return TWITCH_EMBEDDED_CHAT_TEMPLATE.template(id, host).asString();
+    public String build(String id, boolean isDarkMode) {
+        var darkMode = isDarkMode ? "&darkpopout": "";
+        return TWITCH_EMBEDDED_CHAT_TEMPLATE.template(id, host, darkMode).asString();
     }
 }

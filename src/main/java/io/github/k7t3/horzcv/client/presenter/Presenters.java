@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.model;
+package io.github.k7t3.horzcv.client.presenter;
 
-public interface EmbeddedChatFrameBuilder {
+public class Presenters {
 
-    String build(String id, boolean isDarkMode);
+    public static final String SHELL = "shell";
+    public static final String HOME = "home";
+    public static final String CHAT = "chat";
 
 }

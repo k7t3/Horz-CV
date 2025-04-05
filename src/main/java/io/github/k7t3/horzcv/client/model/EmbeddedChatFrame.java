@@ -16,14 +16,38 @@
 
 package io.github.k7t3.horzcv.client.model;
 
-/**
- * 特定のストリーミングの埋め込みチャットフレームを持つレコード
- * <p>
- * iframe要素を構築するときはXSS対策を施すこと。
- * </p>
- *
- * @param entry ストリーミング
- * @param frame チャットフレーム
- */
-public record EmbeddedChatFrame(LiveStreamingEntry entry, String frame) {
+import java.util.Objects;
+
+public class EmbeddedChatFrame {
+
+    private final LiveStreaming stream;
+
+    private String iframe;
+
+    public EmbeddedChatFrame(LiveStreaming stream) {
+        this.stream = stream;
+    }
+
+    public void setIframe(String iframe) {
+        this.iframe = iframe;
+    }
+
+    public LiveStreaming getStream() {
+        return stream;
+    }
+
+    public String getIframe() {
+        return iframe;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof EmbeddedChatFrame that)) return false;
+        return Objects.equals(stream, that.stream);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(stream);
+    }
 }

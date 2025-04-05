@@ -27,8 +27,8 @@ public class YoutubeLiveChatFrameBuilder implements EmbeddedChatFrameBuilder {
      * Youtube LIVEのチャットを埋め込むためのiframeを生成するテンプレート。
      */
     public interface YoutubeEmbeddedChatUrl extends SafeHtmlTemplates {
-        @Template("<iframe src=\"https://www.youtube.com/live_chat?v={0}&embed_domain={1}&dark_theme=1\" class=\"chatFrame youtube\"></iframe>")
-        SafeHtml template(String videoId, String host);
+        @Template("<iframe src=\"https://www.youtube.com/live_chat?v={0}&embed_domain={1}&dark_theme={2}\" class=\"chatFrame youtube\"></iframe>")
+        SafeHtml template(String videoId, String host, String darkMode);
     }
 
     private static final YoutubeEmbeddedChatUrl YOUTUBE_EMBEDDED_CHAT_TEMPLATE = GWT.create(YoutubeEmbeddedChatUrl.class);
@@ -40,7 +40,8 @@ public class YoutubeLiveChatFrameBuilder implements EmbeddedChatFrameBuilder {
     }
 
     @Override
-    public String build(String id) {
-        return YOUTUBE_EMBEDDED_CHAT_TEMPLATE.template(id, host).asString();
+    public String build(String id, boolean isDarkMode) {
+        var darkMode = isDarkMode ? "1" : "0";
+        return YOUTUBE_EMBEDDED_CHAT_TEMPLATE.template(id, host, darkMode).asString();
     }
 }

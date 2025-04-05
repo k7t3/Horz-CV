@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.model;
+package io.github.k7t3.horzcv.client.view;
 
-public interface EmbeddedChatFrameBuilder {
+import org.dominokit.domino.api.shared.extension.ActivationEvent;
 
-    String build(String id, boolean isDarkMode);
-
+public class LayoutEvent extends ActivationEvent {
+    public LayoutEvent(boolean active) {
+        super(active);
+    }
 }

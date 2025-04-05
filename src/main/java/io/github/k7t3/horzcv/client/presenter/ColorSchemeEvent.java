@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.model;
+package io.github.k7t3.horzcv.client.presenter;
 
-public interface EmbeddedChatFrameBuilder {
+import org.dominokit.domino.api.shared.extension.DominoEvent;
 
-    String build(String id, boolean isDarkMode);
+public record ColorSchemeEvent(ColorScheme colorScheme) implements DominoEvent {
 
 }

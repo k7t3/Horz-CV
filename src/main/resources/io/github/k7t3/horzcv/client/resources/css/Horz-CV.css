@@ -1,71 +1,7 @@
-body > #root-div {
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-  height: 100%;
-}
-
-nav .svg-inline--fa {
-  vertical-align: middle;
-}
-
-#nav-bar {
-  padding: 0px 45px;
-}
-
-#nav-bar > .nav-wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.brand-logo > div {
+#nav-title-id {
   font-family: 'Impact';
-}
-
-.copyright {
-  font-family: monospace;
-}
-
-#content {
-  flex-grow: 1;
-}
-
-/** ChatList Page*/
-#chatList {
-  display: flex;
-  height: 100%;
-  flex-direction: row;
-  justify-content: stretch;
-  padding: 2mm 1mm;
-  gap: 1mm;
-}
-
-/** Embedded Chat & Minimize Button*/
-#chatList > .chatContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
-}
-
-/** Remove margin from chat display name editor */
-.chatDisplayName {
-  margin-top: 0px;
-}
-.chatDisplayName > input {
-  margin-bottom: 0px !important;
-}
-
-.inputLiveStream {
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-  align-items: top;
-}
-
-.chatContainer > span {
-  flex-grow: 1;
+  cursor: pointer;
+  font-size: 1.17em;
 }
 
 .chatFrame {

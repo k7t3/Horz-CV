@@ -15,30 +15,18 @@
   ~ limitations under the License.
   -->
 
-<module rename-to="horzcv">
+<module>
     <!--<module>-->
 
     <!-- modules -->
-    <inherits name="com.google.gwt.user.User"/>
-    <inherits name="com.google.gwt.logging.Logging"/>
-    <inherits name="org.dominokit.domino.view.View"/>
-    <inherits name="io.github.k7t3.horzcv.client.Resources"/>
+    <inherits name="io.github.k7t3.horzcv.client.HorzCV"/>
 
     <!-- logging -->
     <set-property name="gwt.logging.logLevel" value="INFO"/>
     <set-property name="gwt.logging.enabled" value="TRUE"/>
-    <!--  <set-property name="gwt.logging.consoleHandler" value="DISABLED"/>-->
 
-    <!-- locale -->
-    <extend-property name="locale" values="en"/>
-    <set-property name="locale" value="en"/>
-    <set-property-fallback name="locale" value="en" />
+    <source path="" />
 
-    <source path="client" />
-
-    <entry-point class="io.github.k7t3.horzcv.client.HorzCVApp" />
-
-    <!-- Only support recent browsers -->
-    <set-property name="user.agent" value="gecko1_8,safari" />
+    <entry-point class="io.github.k7t3.horzcv.client.TestEntryPoint" />
 
 </module>

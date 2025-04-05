@@ -42,4 +42,6 @@ public interface LiveStreamingDetector {
      */
     String construct(String id);
 
+    StreamingService getService();
+
 }

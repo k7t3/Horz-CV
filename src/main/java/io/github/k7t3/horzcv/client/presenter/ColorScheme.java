@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.model;
+package io.github.k7t3.horzcv.client.presenter;
 
-public interface EmbeddedChatFrameBuilder {
+public enum ColorScheme {
 
-    String build(String id, boolean isDarkMode);
+    LIGHT,
+
+    DARK,
+
+    ;
 
 }

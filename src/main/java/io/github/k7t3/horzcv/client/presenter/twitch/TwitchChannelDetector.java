@@ -17,6 +17,7 @@
 package io.github.k7t3.horzcv.client.presenter.twitch;
 
 import com.google.gwt.regexp.shared.RegExp;
+import io.github.k7t3.horzcv.client.model.StreamingService;
 import io.github.k7t3.horzcv.client.presenter.LiveStreamingValidator;
 
 public class TwitchChannelDetector extends LiveStreamingValidator {
@@ -43,4 +44,8 @@ public class TwitchChannelDetector extends LiveStreamingValidator {
         return "https://www.twitch.tv/" + id;
     }
 
+    @Override
+    public StreamingService getService() {
+        return StreamingService.TWITCH;
+    }
 }
