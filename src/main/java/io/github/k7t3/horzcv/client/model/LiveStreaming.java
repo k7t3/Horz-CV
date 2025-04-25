@@ -115,6 +115,9 @@ public class LiveStreaming {
     }
 
     public static List<LiveStreaming> fromTokens(String tokens) {
+        if (tokens == null || tokens.isEmpty()) {
+            return List.of();
+        }
         return Stream.of(tokens.split(TOKEN_DELIMITER))
                 .map(LiveStreaming::fromToken)
                 .filter(Objects::nonNull)

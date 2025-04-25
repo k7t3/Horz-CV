@@ -60,8 +60,10 @@ public class ChatListViewImpl extends BaseElementView<HTMLElement> implements Ch
     private void notifyListUpdated() {
         if (handler != null) {
             var list = new LinkedList<EmbeddedChatFrame>();
-            for (var chat : first) {
-                list.add(chat.chatFrame);
+            if (first != null) {
+                for (var chat : first) {
+                    list.add(chat.chatFrame);
+                }
             }
             handler.onListUpdated(Collections.unmodifiableList(list));
         }
