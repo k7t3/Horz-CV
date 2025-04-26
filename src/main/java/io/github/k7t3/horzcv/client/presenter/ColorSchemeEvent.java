@@ -18,6 +18,38 @@ package io.github.k7t3.horzcv.client.presenter;
 
 import org.dominokit.domino.api.shared.extension.DominoEvent;
 
-public record ColorSchemeEvent(ColorScheme colorScheme) implements DominoEvent {
+import java.util.Objects;
+
+@SuppressWarnings("ClassCanBeRecord")
+public final class ColorSchemeEvent implements DominoEvent {
+    
+    private final ColorScheme colorScheme;
+
+    public ColorSchemeEvent(ColorScheme colorScheme) {
+        this.colorScheme = colorScheme;
+    }
+
+    public ColorScheme getColorScheme() {
+        return colorScheme;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (ColorSchemeEvent) obj;
+        return Objects.equals(this.colorScheme, that.colorScheme);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(colorScheme);
+    }
+
+    @Override
+    public String toString() {
+        return "ColorSchemeEvent[" +
+                "colorScheme=" + colorScheme + ']';
+    }
 
 }

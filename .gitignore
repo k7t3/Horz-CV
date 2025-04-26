@@ -39,3 +39,11 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Node.js ###
+package-lock.json
+
+### Firebase ###
+.firebase/
+firebase-debug.log*
+firebase-debug.*.log*
