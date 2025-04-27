@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "public": "build/gwt/js",
+    "ignore": [
+      "firebase.json",
+      "**/.*"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

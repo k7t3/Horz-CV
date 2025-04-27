@@ -102,10 +102,11 @@ gwt {
         startServer = true
         port = 8080
 
-        // grettyで起動するサーバーのURL
+        // 起動するサーバーのURL
         startupUrl = 'http://localhost:8080/'
 
-        //devMode.style = 'OBFUSCATED'
+        // Optional: The subdirectory inside the war dir where DevMode will create module directories. (defaults empty for top level)
+        modulePathPrefix = ''
 
         devMode.generateJsInteropExports = true
     }

@@ -119,7 +119,7 @@ public class ChatListPresenter
 
     @ListenTo(event = ColorSchemeEvent.class)
     public void onEventReceived(ColorSchemeEvent event) {
-        var isDarkMode = event.colorScheme() == ColorScheme.DARK;
+        var isDarkMode = event.getColorScheme() == ColorScheme.DARK;
         updateEmbeddedChatFrames(isDarkMode);
         view.setChatList(Collections.unmodifiableList(chatFrames));
     }

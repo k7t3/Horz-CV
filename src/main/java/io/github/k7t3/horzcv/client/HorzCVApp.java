@@ -19,33 +19,28 @@ package io.github.k7t3.horzcv.client;
 import com.google.gwt.core.client.EntryPoint;
 import org.dominokit.domino.api.client.ClientApp;
 import org.dominokit.domino.api.client.annotations.ClientModule;
-import org.dominokit.domino.api.shared.extension.PredefinedSlots;
 import org.dominokit.domino.gwt.client.app.DominoGWT;
 import org.dominokit.domino.view.DominoViewOptions;
-import org.dominokit.domino.view.slots.BodyElementSlot;
 
 import java.util.logging.Logger;
 
 @ClientModule(name = "HorzCV")
 public class HorzCVApp implements EntryPoint {
 
-	private static final Logger logger = Logger.getLogger(HorzCVApp.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(HorzCVApp.class.getName());
 
 	public void onModuleLoad() {
 		var options = DominoViewOptions.getInstance();
+		options.setRootPath(""); // 実行環境と合わせる必要がある？
 		DominoGWT.init(options);
 
 		var app = ClientApp.make();
 
-		// アノテーションプロセッサが生成したプレゼンターの実装をロードする設定を登録
+		// アノテーションプロセッサが生成する本モジュールのを登録して実行する
 		app.configureModule(new HorzCVModuleConfiguration());
-
-		// Shellを割り当てるスロットの登録
-		app.slotsManager().registerSlot(PredefinedSlots.BODY_SLOT, BodyElementSlot.create());
-
 		app.run();
 
-		logger.info("App started");
+		LOGGER.info("App started");
 	}
 
 }
