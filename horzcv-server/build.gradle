@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.github.k7t3'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation project(':horzcv-shared')
+
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+
+    // Weld CDI
+    implementation 'org.jboss.weld.se:weld-se-core:6.0.1.Final'
+
+    // GWT RPC
+    implementation 'org.gwtproject:gwt-servlet-jakarta:2.12.1'
+
+    // Cache
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
+
+    // Google API: Youtube Data API, Firestore
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev20250128-2.0.0'
+    implementation 'com.google.api-client:google-api-client-jackson2:2.7.2'
+    implementation 'com.google.http-client:google-http-client-appengine:1.46.1'
+    implementation 'com.google.cloud:google-cloud-firestore:3.30.9'
+
+    // Logging SLF4J
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'org.slf4j:slf4j-jdk-platform-logging:2.0.16'
+
+    // Logging Implementation
+    implementation 'ch.qos.logback:logback-classic:1.5.7'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
+
+    testImplementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.0.16'
+}
+
+test {
+    useJUnitPlatform()
+}
