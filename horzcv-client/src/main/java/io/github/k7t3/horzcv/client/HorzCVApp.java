@@ -31,7 +31,7 @@ public class HorzCVApp implements EntryPoint {
 
 	public void onModuleLoad() {
 		var options = DominoViewOptions.getInstance();
-		options.setRootPath(""); // 実行環境と合わせる必要がある？
+		options.setRootPath("app"); // 実行環境と合わせる必要がある？
 		DominoGWT.init(options);
 
 		var app = ClientApp.make();

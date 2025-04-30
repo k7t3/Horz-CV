@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.presenter;
+package io.github.k7t3.horzcv.client.presenter.theme;
 
 import elemental2.dom.DomGlobal;
 import org.dominokit.domino.api.client.ClientApp;

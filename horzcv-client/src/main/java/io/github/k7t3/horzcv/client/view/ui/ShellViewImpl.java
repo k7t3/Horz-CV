@@ -18,13 +18,10 @@ package io.github.k7t3.horzcv.client.view.ui;
 
 import elemental2.dom.HTMLElement;
 import io.github.k7t3.horzcv.client.presenter.ShellPresenter;
-import io.github.k7t3.horzcv.client.view.Constants;
 import io.github.k7t3.horzcv.client.view.ShellView;
 import org.dominokit.domino.api.client.annotations.UiView;
 import org.dominokit.domino.api.client.mvp.slots.IsSlot;
-import org.dominokit.domino.ui.icons.lib.Icons;
 import org.dominokit.domino.ui.layout.AppLayout;
-import org.dominokit.domino.ui.utils.PostfixAddOn;
 import org.dominokit.domino.view.BaseElementView;
 import org.dominokit.domino.view.slots.SingleElementSlot;
 
@@ -50,12 +47,6 @@ public class ShellViewImpl extends BaseElementView<HTMLElement> implements Shell
                     handler.onTitleClicked();
                 }
             });
-
-
-            var project = a(Constants.PROJECT_PAGE, "_blank")
-                    .appendChild(Icons.crowd().clickable())
-                    .setTooltip("Open a project page");
-            nav.appendChild(PostfixAddOn.of(project));
         });
         layout.getContent().setPadding("0.3em 0.8em");
     }

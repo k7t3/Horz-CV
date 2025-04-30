@@ -1,5 +1,4 @@
 plugins {
-    id 'java-library'
     // https://gwt-gradle.docstr.org/latest/Configuration
     id "org.docstr.gwt" version "2.1.6"
 }
@@ -8,6 +7,16 @@ plugins {
 group = 'io.github.k7t3'
 version = '1.0-SNAPSHOT'
 
+configurations {
+    // Additional configurations each holding a single zip file with
+    // the corresponding GWT compiler output.
+    gwtJsZipFile
+    gwtDeployZipFile
+
+    // 共通ライブラリのソース用構成
+    sharedSource
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -15,16 +24,21 @@ java {
 }
 
 sourceSets {
+    // domino-mvpフレームワークの生成ソース、共通ライブラリの抽出ソースを追加
+    // これらはGWTのトランスパイラーに識別させる必要があるため
     main {
         java {
             srcDirs += 'build/generated/sources/annotationProcessor/java/main'
+            srcDirs += 'build/extracted'
         }
     }
 }
 
 dependencies {
-    // フロントエンド、バックエンドの共通モジュール
-    implementation project(':horzcv-shared')
+    // 共通モジュール
+    implementation project(path: ':horzcv-shared')
+    // 共通モジュールのソース(GWTのJSトランスパイラで使用)
+    sharedSource project(path: ':horzcv-shared', configuration: 'sources')
 
     // DominoKitのライブラリ domino-ui, domino-mvp
     implementation 'org.dominokit:domino-ui:2.0.4'
@@ -41,6 +55,17 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 
     testImplementation 'org.mockito:mockito-core:5.17.0'
+}
+
+// 共通モジュールのソースJarを解凍するタスク
+tasks.register('unzipSharedSource', Copy) {
+    dependsOn ':horzcv-shared:sourcesJar'
+    from zipTree(configurations.sharedSource.singleFile)
+    into layout.buildDirectory.dir('extracted')
+}
+
+tasks.named('compileJava') {
+    dependsOn 'unzipSharedSource'
 }
 
 gwt {
@@ -72,10 +97,6 @@ gwt {
 
     // Optional: Configures the GWT compiler
     compiler {
-        //
-        // All options in 'gwt' closure (except 'gwtVersion') can be overridden here
-        //
-
         // Optional: Sets the optimization level used by the compiler (0=none, 9=maximum)
         //optimize = 9
         optimize = 0
@@ -84,49 +105,28 @@ gwt {
         compileReport = true
 
         draftCompile = true
-
-        //compiler.style = 'OBFUSCATED'
     }
 
-
-    // Optional: Configures the GWT development mode
-    devMode {
-        //
-        // All options in 'gwt' closure (except 'gwtVersion') can be overridden here
-        //
-
-        bindAddress = 'localhost'
-        codeServerPort = 9876
-
-        startServer = true
-        port = 8080
-
-        // 起動するサーバーのURL
-        startupUrl = 'http://localhost:8080/'
-
-        // Optional: The subdirectory inside the war dir where DevMode will create module directories. (defaults empty for top level)
-        modulePathPrefix = ''
-
-        devMode.generateJsInteropExports = true
+    superDev {
+        // サーバーモジュールのアプリケーションディレクトリを対象にする
+        launcherDir = project(':horzcv-server').layout.buildDirectory.dir('tomcat/webapps/app')
     }
 
     // Optional: Configures the GWT test runner
     gwtTest {
-
         // Optional: To specify which test tasks should have GWT test enabled, default to empty list, which is interpreted to mean all tasks of type {@link org.gradle.api.tasks.testing.Test Test}
         testTasks = [ 'test' ]
 
         gwtTest.sourceLevel = '17'
-
     }
 
 }
 
-// Additional configurations each holding a single zip file with
-// the corresponding GWT compiler output.
-configurations {
-    gwtJsZipFile
-    gwtDeployZipFile
+// クライアントアプリケーションのリソースを
+// サーバーのテスト用Tomcatディレクトリに反映するタスク
+tasks.register('gwtClientResources', Sync) {
+    from gwtCompile.war
+    into project(':horzcv-server').layout.buildDirectory.dir('tomcat/webapps/app')
 }
 
 // Zip task to package GWT JS output
@@ -163,6 +163,7 @@ tasks.named('gwtCompile') {
 }
 
 tasks.register('gwtCompileForDeploy') {
+    group = 'GWT'
     dependsOn gwtCompile
 
     doLast {
@@ -178,9 +179,4 @@ tasks.register('gwtCompileForDeploy') {
         webInf.file('web.xml').asFile.delete()
         webInf.asFile.delete()
     }
-}
-
-tasks.register('runDevEnv') {
-    dependsOn gwtCompile
-    dependsOn gwtDevMode
 }

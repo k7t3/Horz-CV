@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.view;
+package io.github.k7t3.horzcv.shared.service;
 
-public class Pages {
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import io.github.k7t3.horzcv.shared.model.StreamerInfoResponse;
 
-    public static final String HOME = "home";
+/**
+ * GWTによって自動的に実装されるインターフェース
+ * @see StreamerInfoService 関連
+ */
+public interface StreamerInfoServiceAsync {
 
-    public static final String CHAT = "chat";
+    void getStreamerInfo(String url, AsyncCallback<StreamerInfoResponse> callback);
 
 }

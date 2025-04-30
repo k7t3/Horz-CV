@@ -69,7 +69,21 @@ public class HomeViewImpl extends BaseElementView<HTMLElement> implements HomeVi
                 //.addCss()
                 .setDirection(FlexDirection.TOP_TO_BOTTOM)
                 .setAlignItems(FlexAlign.CENTER)
-                .appendChild(last);
+                .appendChild(last)
+                .appendChild(
+                        p().textContent("This application supports Youtube Live ")
+                                .addCss(dui_font_serif, dui_m_t_8)
+                                .appendChild(a(Constants.YOUTUBE, "_blank").appendChild(i()
+                                        .addCss("fa-brands", "fa-youtube", "fa-lg")
+                                        .addCss(dui_fg_red_d_4))
+                                )
+                                .appendChild(" and Twitch ")
+                                .appendChild(a(Constants.TWITCH, "_blank").appendChild(i()
+                                        .addCss("fa-brands", "fa-twitch", "fa-lg")
+                                        .addCss(dui_fg_purple_d_4))
+                                )
+                                .appendChild(".")
+                );
 
         submit.addClickListener(evt -> {
             evt.preventDefault();
@@ -94,7 +108,13 @@ public class HomeViewImpl extends BaseElementView<HTMLElement> implements HomeVi
                     var flex = FlexLayout.create()
                             .setJustifyContent(FlexJustifyContent.END)
                             .setAlignItems(FlexAlign.CENTER)
-                            .appendChild(Constants.COPYRIGHT);
+                            .appendChild(Constants.COPYRIGHT)
+                            .appendChild(div().addCss("dui-p-x-2"))
+                            .appendChild(
+                                    a(Constants.PROJECT_PAGE, "_blank").appendChild(
+                                            i().addCss("fa-brands", "fa-github", "fa-lg")
+                                    )
+                            );
                     self.appendChild(
                             FooterElement.of(flex.element())
                     );
@@ -108,7 +128,6 @@ public class HomeViewImpl extends BaseElementView<HTMLElement> implements HomeVi
         LOGGER.info("addLiveStreamingForm");
         // dui_p_x_4
         var item = FlexItem.of(form).addCss(dui_w_3_4p);
-        //flex.appendChild(item);
         flex.appendChildBefore(item, last);
     }
 

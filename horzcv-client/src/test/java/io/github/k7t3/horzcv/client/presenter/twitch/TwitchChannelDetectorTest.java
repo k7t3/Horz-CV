@@ -46,4 +46,39 @@ public class TwitchChannelDetectorTest {
 
         assertEquals(expected, detector.construct(id));
     }
+
+    @Test
+    public void parseIdReturnsCorrectIdForValidUrl() {
+        var url = "https://www.twitch.tv/validchannel";
+
+        assertEquals("validchannel", detector.parseId(url));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void parseIdThrowsExceptionForInvalidUrl() {
+        var url = "https://www.invalidsite.com/channel";
+
+        detector.parseId(url);
+    }
+
+    @Test
+    public void parseIdHandlesUrlWithTrailingSlash() {
+        var url = "https://www.twitch.tv/validchannel/";
+
+        assertEquals("validchannel", detector.parseId(url));
+    }
+
+    @Test
+    public void constructReturnsCorrectUrlForValidId() {
+        var id = "validchannel";
+
+        assertEquals("https://www.twitch.tv/validchannel", detector.construct(id));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constructHandlesEmptyId() {
+        var id = "";
+
+        assertEquals("https://www.twitch.tv/", detector.construct(id));
+    }
 }

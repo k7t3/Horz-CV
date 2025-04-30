@@ -24,13 +24,16 @@ import io.github.k7t3.horzcv.client.model.EmbeddedChatFrameBuilder;
 import io.github.k7t3.horzcv.client.model.LiveStreaming;
 import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
 import io.github.k7t3.horzcv.client.model.StreamingService;
+import io.github.k7t3.horzcv.client.presenter.theme.ColorScheme;
+import io.github.k7t3.horzcv.client.presenter.theme.ColorSchemeEvent;
+import io.github.k7t3.horzcv.client.presenter.theme.ThemeManager;
 import io.github.k7t3.horzcv.client.presenter.twitch.TwitchChannelChatFrameBuilder;
 import io.github.k7t3.horzcv.client.presenter.twitch.TwitchChannelDetector;
 import io.github.k7t3.horzcv.client.presenter.youtube.YoutubeLiveChatFrameBuilder;
 import io.github.k7t3.horzcv.client.presenter.youtube.YoutubeLiveDetector;
 import io.github.k7t3.horzcv.client.view.ChatListView;
 import io.github.k7t3.horzcv.client.view.LayoutEvent;
-import io.github.k7t3.horzcv.client.view.Pages;
+import io.github.k7t3.horzcv.client.view.Routes;
 import io.github.k7t3.horzcv.client.view.Slots;
 import org.dominokit.domino.api.client.annotations.presenter.*;
 import org.dominokit.domino.api.client.mvp.presenter.ViewablePresenter;
@@ -45,14 +48,14 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("SimplifyStreamApiCallChains")
-@AutoRoute(token = Pages.CHAT)
+@AutoRoute(token = Routes.CHAT)
 @AutoReveal
 @Slot(Slots.CONTENT)
 @PresenterProxy(name = Presenters.CHAT)
 @DependsOn(@EventsGroup(LayoutEvent.class))
 public class ChatListPresenter
         extends ViewablePresenter<ChatListView>
-        implements ChatListView.ChatListUiHandler {
+        implements ChatListView.ChatListUiHandler, WindowTitleProvider {
 
     private static final Logger LOGGER = Logger.getLogger(ChatListPresenter.class.getName());
 
@@ -117,6 +120,10 @@ public class ChatListPresenter
         }
     }
 
+    /**
+     * カラースキームが変更された時に実行されるメソッド
+     * @param event カラースキームの変更イベント
+     */
     @ListenTo(event = ColorSchemeEvent.class)
     public void onEventReceived(ColorSchemeEvent event) {
         var isDarkMode = event.getColorScheme() == ColorScheme.DARK;
@@ -126,9 +133,6 @@ public class ChatListPresenter
 
     @Override
     public void onListUpdated(List<EmbeddedChatFrame> chatFrames) {
-        var history = history();
-        var current = history.currentToken();
-
         if (chatFrames.isEmpty()) {
             redirectToHome();
             return;
@@ -141,11 +145,16 @@ public class ChatListPresenter
         String fragments = LiveStreaming.toTokens(chatList);
         saveSession(fragments);
 
+        var history = history();
+        var current = history.currentToken();
+
         // 履歴の更新
         current.replaceAllFragments(fragments);
 
+        var names = title(chatList);
+
         // 履歴に新しいトークンをセット
-        history.pushState(StateToken.of(current));
+        history.pushState(StateToken.of(current).title(names));
 
         // ストリームリストの更新
         this.chatFrames.clear();
@@ -212,6 +221,6 @@ public class ChatListPresenter
     }
 
     private void redirectToHome() {
-        history().fireState(StateToken.of(Pages.HOME));
+        history().fireState(StateToken.of(Routes.HOME));
     }
 }

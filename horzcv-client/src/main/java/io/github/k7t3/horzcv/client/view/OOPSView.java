@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.presenter;
+package io.github.k7t3.horzcv.client.view;
 
-public enum ColorScheme {
+import org.dominokit.domino.api.client.mvp.view.ContentView;
+import org.dominokit.domino.api.client.mvp.view.HasUiHandlers;
+import org.dominokit.domino.api.client.mvp.view.UiHandlers;
 
-    LIGHT,
+public interface OOPSView extends ContentView, HasUiHandlers<OOPSView.OOPSUiHandlers> {
 
-    DARK,
+    void setMessage(String message);
 
-    ;
+    interface OOPSUiHandlers extends UiHandlers {
+    }
 
 }

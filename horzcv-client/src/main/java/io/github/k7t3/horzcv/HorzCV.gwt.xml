@@ -16,18 +16,17 @@
   -->
 
 <module rename-to="horzcv">
-    <!--<module>-->
 
     <!-- modules -->
     <inherits name="com.google.gwt.user.User"/>
     <inherits name="com.google.gwt.logging.Logging"/>
     <inherits name="org.dominokit.domino.view.View"/>
+    <inherits name="io.github.k7t3.horzcv.shared.Shared"/>
     <inherits name="io.github.k7t3.horzcv.client.Resources"/>
 
     <!-- logging -->
     <set-property name="gwt.logging.logLevel" value="INFO"/>
     <set-property name="gwt.logging.enabled" value="TRUE"/>
-    <!--  <set-property name="gwt.logging.consoleHandler" value="DISABLED"/>-->
 
     <!-- locale -->
     <extend-property name="locale" values="en"/>

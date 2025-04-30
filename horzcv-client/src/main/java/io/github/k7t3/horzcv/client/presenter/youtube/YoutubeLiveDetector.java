@@ -18,24 +18,26 @@ package io.github.k7t3.horzcv.client.presenter.youtube;
 
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
 import io.github.k7t3.horzcv.client.model.StreamingService;
-import io.github.k7t3.horzcv.client.presenter.LiveStreamingValidator;
 
-public class YoutubeLiveDetector extends LiveStreamingValidator {
+public class YoutubeLiveDetector implements LiveStreamingDetector {
 
     /** Youtube LIVEのビデオIDにマッチする正規表現*/
-    //private static final RegExp YOUTUBE_ID_REGEX = RegExp.compile("(?<=www.youtube.com/watch\\?v=)[^&]+");
-    // テストケースのJavaScriptの実装次第では後方参照が使用できないようなので・・・
-    private static final RegExp YOUTUBE_ID_REGEX = RegExp.compile("www\\.youtube\\.com/(?:watch\\?v=|live/)([^/&]+)");
+    private final RegExp regex = RegExp.compile("https?://(?:www\\.)?youtube\\.com/(?:watch\\?v=|live/)([^/&?]+)");
 
     public YoutubeLiveDetector() {
-        super("https://www.youtube.com/(watch\\?v=|live/)[^/&]+");
+    }
+
+    @Override
+    public boolean isValidURL(String url) {
+        return regex.test(url);
     }
 
     @Override
     public String parseId(String url) {
-        MatchResult matcher = YOUTUBE_ID_REGEX.exec(url);
-        if (0 < matcher.getGroupCount()) {
+        MatchResult matcher = regex.exec(url);
+        if (matcher != null && 0 < matcher.getGroupCount()) {
             return matcher.getGroup(1);
         }
         throw new IllegalArgumentException("Invalid YouTube Live URL");

@@ -148,6 +148,19 @@ public class ChatView implements IsElement<HTMLDivElement>, HasUiHandlers<ChatVi
                         ).addCss(dui_flex, dui_items_end).hideOn(ScreenMedia.SMALL_AND_DOWN)
                 );
 
+        var layout = FlexLayout.create()
+                .setDirection(FlexDirection.TOP_TO_BOTTOM)
+                .setJustifyContent(FlexJustifyContent.CENTER)
+                .setAlignItems(FlexAlign.STRETCH)
+                .setGap("10px")
+                .setHeight("100%");
+        layout.appendChild(FlexItem.of(iframe = div().setHeight("100%")).setFlexGrow(1));
+        layout.appendChild(FlexItem.of(actions));
+
+        flexItem = FlexItem.of(layout);
+    }
+
+    public void initialize() {
         left.addClickListener(e -> {
             if (handler != null)
                 handler.onLeftButtonClicked(this);
@@ -162,17 +175,6 @@ public class ChatView implements IsElement<HTMLDivElement>, HasUiHandlers<ChatVi
             if (handler != null)
                 handler.onNameChanged(this, newValue);
         });
-
-        var layout = FlexLayout.create()
-                .setDirection(FlexDirection.TOP_TO_BOTTOM)
-                .setJustifyContent(FlexJustifyContent.CENTER)
-                .setAlignItems(FlexAlign.STRETCH)
-                .setGap("10px")
-                .setHeight("100%");
-        layout.appendChild(FlexItem.of(iframe = div().setHeight("100%")).setFlexGrow(1));
-        layout.appendChild(FlexItem.of(actions));
-
-        flexItem = FlexItem.of(layout);
     }
 
     private void close() {

@@ -19,6 +19,7 @@ package io.github.k7t3.horzcv.client.presenter;
 import io.github.k7t3.horzcv.client.model.LiveStreaming;
 import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
 import io.github.k7t3.horzcv.client.view.LiveStreamingFormView;
+import io.github.k7t3.horzcv.shared.service.StreamerInfoServiceAsync;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -27,13 +28,20 @@ public class LiveStreamingPresenter implements LiveStreamingFormView.LiveStreami
 
     private static final Logger LOGGER = Logger.getLogger(LiveStreamingPresenter.class.getName());
 
+    private final StreamerInfoServiceAsync streamerInfoService;
+
     private final List<LiveStreamingDetector> detectors;
 
     private final LiveStreamingFormView view;
 
     private boolean valid = false;
 
-    public LiveStreamingPresenter(List<LiveStreamingDetector> detectors, LiveStreamingFormView view) {
+    public LiveStreamingPresenter(
+            StreamerInfoServiceAsync streamerInfoService,
+            List<LiveStreamingDetector> detectors,
+            LiveStreamingFormView view
+    ) {
+        this.streamerInfoService = streamerInfoService;
         this.detectors = detectors;
         this.view = view;
         view.setUiHandlers(this);
@@ -77,6 +85,14 @@ public class LiveStreamingPresenter implements LiveStreamingFormView.LiveStreami
         var invalid = detectors.stream().noneMatch(d -> d.isValidURL(uri));
         view.setInvalid(invalid);
         valid = !invalid;
+
+        // URIに基づくユーザー名が取得できたときはそれを割り当てる
+        streamerInfoService.getStreamerInfo(uri, BasicAsyncCallback.of(response -> {
+            if (response.isIdentified() && response.getInfoArray().length > 0) {
+                var info = response.getInfoArray()[0];
+                view.setName(info.getName());
+            }
+        }));
     }
 
     @Override

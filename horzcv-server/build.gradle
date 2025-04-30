@@ -1,5 +1,7 @@
 plugins {
-    id 'java'
+    // https://plugins.gradle.org/plugin/com.github.sahara3.tomcat-runner
+    id 'war'
+    id 'com.github.sahara3.tomcat-runner' version '0.3.0'
 }
 
 group = 'io.github.k7t3'
@@ -11,16 +13,28 @@ java {
     }
 }
 
+tomcat {
+    // See https://tomcat.apache.org/whichversion.html
+    // for which version of Tomcat to use for which version of Servlet API
+    version = '11.0.2'
+    port = 8080
+
+    webapp(project) {
+        contextPath = 'app'
+    }
+}
+
+tomcatRun {
+    dependsOn ':horzcv-client:gwtClientResources'
+}
+
 dependencies {
     implementation project(':horzcv-shared')
 
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
 
     // Weld CDI
-    implementation 'org.jboss.weld.se:weld-se-core:6.0.1.Final'
-
-    // GWT RPC
-    implementation 'org.gwtproject:gwt-servlet-jakarta:2.12.1'
+    implementation 'org.jboss.weld.servlet:weld-servlet-core:6.0.2.Final'
 
     // Cache
     implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
@@ -30,6 +44,9 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-jackson2:2.7.2'
     implementation 'com.google.http-client:google-http-client-appengine:1.46.1'
     implementation 'com.google.cloud:google-cloud-firestore:3.30.9'
+
+    // Twitch
+    implementation 'com.github.twitch4j:twitch4j:1.24.0'
 
     // Logging SLF4J
     implementation 'org.slf4j:slf4j-api:2.0.16'

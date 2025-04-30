@@ -20,4 +20,6 @@ public class Storages {
 
     public static final String TOKEN = "horzcv-token";
 
+    public static final String ERROR = "horzcv-error";
+
 }

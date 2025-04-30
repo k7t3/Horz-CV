@@ -17,23 +17,26 @@
 package io.github.k7t3.horzcv.client.presenter.twitch;
 
 import com.google.gwt.regexp.shared.RegExp;
+import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
 import io.github.k7t3.horzcv.client.model.StreamingService;
-import io.github.k7t3.horzcv.client.presenter.LiveStreamingValidator;
 
-public class TwitchChannelDetector extends LiveStreamingValidator {
+public class TwitchChannelDetector implements LiveStreamingDetector {
 
     /** Twitchのチャンネルにマッチする正規表現*/
-    //private static final RegExp TWITCH_CHANNEL_REGEX = RegExp.compile("(?<=www.twitch.tv/)[^/]+$");
-    private static final RegExp TWITCH_CHANNEL_REGEX = RegExp.compile("www\\.twitch\\.tv/([^/]+)");
+    private final RegExp regex = RegExp.compile("https?://(?:www\\.)twitch\\.tv/([^/]+)");
 
     public TwitchChannelDetector() {
-        super("https://www.twitch.tv/.+");
+    }
+
+    @Override
+    public boolean isValidURL(String url) {
+        return regex.test(url);
     }
 
     @Override
     public String parseId(String url) {
-        var matcher = TWITCH_CHANNEL_REGEX.exec(url);
-        if (0 < matcher.getGroupCount()) {
+        var matcher = regex.exec(url);
+        if (matcher != null && 0 < matcher.getGroupCount()) {
             return matcher.getGroup(1);
         }
         throw new IllegalArgumentException("Invalid Twitch Channel URL");
@@ -41,6 +44,9 @@ public class TwitchChannelDetector extends LiveStreamingValidator {
 
     @Override
     public String construct(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid Twitch Channel ID");
+        }
         return "https://www.twitch.tv/" + id;
     }
 

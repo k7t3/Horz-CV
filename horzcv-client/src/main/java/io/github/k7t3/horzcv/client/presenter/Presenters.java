@@ -21,5 +21,6 @@ public class Presenters {
     public static final String SHELL = "shell";
     public static final String HOME = "home";
     public static final String CHAT = "chat";
+    public static final String OOPS = "oops";
 
 }

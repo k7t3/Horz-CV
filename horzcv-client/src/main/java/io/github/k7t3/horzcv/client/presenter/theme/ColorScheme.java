@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package io.github.k7t3.horzcv.client.presenter;
+package io.github.k7t3.horzcv.client.presenter.theme;
 
-import com.google.gwt.regexp.shared.RegExp;
-import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
+public enum ColorScheme {
 
-public abstract class LiveStreamingValidator implements LiveStreamingDetector {
+    LIGHT,
 
-    private final RegExp pattern;
+    DARK,
 
-    public LiveStreamingValidator(String pattern) {
-        this.pattern = RegExp.compile(pattern);
-    }
-
-    @Override
-    public boolean isValidURL(String url) {
-        return url == null || this.pattern.test(url);
-    }
+    ;
 
 }

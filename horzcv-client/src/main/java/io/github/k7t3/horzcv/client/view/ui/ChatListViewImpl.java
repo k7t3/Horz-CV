@@ -106,6 +106,7 @@ public class ChatListViewImpl extends BaseElementView<HTMLElement> implements Ch
             chatView.name.setValue(chatFrame.getStream().getName());
             chatView.setDisableLeft(index++ == 0);
             chatView.setDisableRight(index == size);
+            chatView.initialize();
             chatView.startAnimation();
         }
     }

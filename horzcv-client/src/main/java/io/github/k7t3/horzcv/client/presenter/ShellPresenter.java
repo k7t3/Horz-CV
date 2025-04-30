@@ -16,13 +16,15 @@
 
 package io.github.k7t3.horzcv.client.presenter;
 
+import io.github.k7t3.horzcv.client.presenter.theme.ThemeManager;
 import io.github.k7t3.horzcv.client.view.LayoutEvent;
-import io.github.k7t3.horzcv.client.view.Pages;
+import io.github.k7t3.horzcv.client.view.Routes;
 import io.github.k7t3.horzcv.client.view.ShellView;
 import io.github.k7t3.horzcv.client.view.Slots;
 import org.dominokit.domino.api.client.annotations.presenter.*;
 import org.dominokit.domino.api.client.mvp.presenter.ViewablePresenter;
 import org.dominokit.domino.api.shared.extension.PredefinedSlots;
+import org.dominokit.domino.history.StateToken;
 
 import java.util.logging.Logger;
 
@@ -46,14 +48,15 @@ public class ShellPresenter extends ViewablePresenter<ShellView> implements Shel
 
     @Override
     public void onTitleClicked() {
-        publishState(Pages.HOME);
+        var state = StateToken.of(Routes.HOME).title("Horz CV: Home");
+        history().fireState(state);
     }
 
     @OnReveal
     public void onReveal() {
         if (history().currentToken().paths().isEmpty()) {
             LOGGER.info("No token, redirecting to home");
-            publishState(Pages.HOME);
+            publishState(Routes.HOME, "Horz CV: Home", null);
         }
     }
 

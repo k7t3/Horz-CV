@@ -18,6 +18,10 @@ package io.github.k7t3.horzcv.client.view;
 
 public class Routes {
 
+    public static final String HOME = "home";
+
     public static final String CHAT = "chat";
+
+    public static final String OOPS = "oops";
 
 }
