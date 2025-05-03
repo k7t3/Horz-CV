@@ -50,7 +50,7 @@ public class TwitchStreamerIdentityFinder implements StreamerFinder {
 
     private StreamerInfo findStreamerInfo(String login) {
         var helix = client.getHelix();
-        var command = helix.searchChannels(null, login, 10, null, false);
+        var command = helix.searchChannels(null, login, MAX_NUM, null, false);
         var response = command.execute();
         var result = response.getResults();
         if (result.isEmpty()) {

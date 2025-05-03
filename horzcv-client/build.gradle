@@ -1,6 +1,6 @@
 plugins {
     // https://gwt-gradle.docstr.org/latest/Configuration
-    id "org.docstr.gwt" version "2.1.6"
+    id "org.docstr.gwt" version "$gwtGradleVersion"
 }
 
 
@@ -19,7 +19,7 @@ configurations {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(clientJavaVersion)
     }
 }
 
@@ -40,16 +40,15 @@ dependencies {
     // 共通モジュールのソース(GWTのJSトランスパイラで使用)
     sharedSource project(path: ':horzcv-shared', configuration: 'sources')
 
-    // DominoKitのライブラリ domino-ui, domino-mvp
-    implementation 'org.dominokit:domino-ui:2.0.4'
-    implementation 'org.dominokit:domino-mvp:2.0.0-RC2'
-    implementation 'org.dominokit:domino-mvp-gwt-view:2.0.0-RC2'
+    // DominoKitのライブラリ domino-ui
+    implementation "org.dominokit:domino-ui:$dominoUIVersion"
 
+    // DominoKitのライブラリ domino-mvp
+    implementation "org.dominokit:domino-mvp:$dominoFrameworkVersion"
+    implementation "org.dominokit:domino-mvp-gwt-view:$dominoFrameworkVersion"
     // domino-mvpのアノテーションプロセッサ
-    annotationProcessor 'org.dominokit:domino-mvp-apt-client:2.0.0-RC2'
-    annotationProcessor 'org.dominokit:domino-mvp-api-client:2.0.0-RC2'
-    compileOnly 'org.dominokit:domino-mvp-apt-client:2.0.0-RC2'
-    compileOnly 'org.dominokit:domino-mvp-api-client:2.0.0-RC2'
+    annotationProcessor "org.dominokit:domino-mvp-apt-client:$dominoFrameworkVersion"
+    annotationProcessor "org.dominokit:domino-mvp-api-client:$dominoFrameworkVersion"
 
     // GWTがJUnit5をサポートしていないためJUnit4を使用する
     testImplementation 'junit:junit:4.13.2'
@@ -69,13 +68,13 @@ tasks.named('compileJava') {
 }
 
 gwt {
-    gwtVersion = '2.12.2'
+    //gwtVersion = ext.gwtVersion
     modules = [ 'io.github.k7t3.horzcv.HorzCV' ]
 
     // DominoKitはトランスパイル時のメモリ使用量が大きい
     maxHeapSize = '1024M'
 
-    sourceLevel = '17'
+    sourceLevel = "$clientJavaVersion"
 
     // Optional: Compiles faster by reusing data from the previous compile. (defaults to OFF)
     incremental = false
@@ -117,7 +116,7 @@ gwt {
         // Optional: To specify which test tasks should have GWT test enabled, default to empty list, which is interpreted to mean all tasks of type {@link org.gradle.api.tasks.testing.Test Test}
         testTasks = [ 'test' ]
 
-        gwtTest.sourceLevel = '17'
+        gwtTest.sourceLevel = "$clientJavaVersion"
     }
 
 }

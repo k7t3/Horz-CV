@@ -40,6 +40,7 @@ public class StreamerFinders implements StreamerFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamerFinders.class);
 
     // URLに対応するストリーマーの情報のキャッシュローダー
+    // Twitch4Jのライブラリが使用している軽量のキャッシュ機構
     private final LoadingCache<String, StreamerInfoResponse> cache = Caffeine.newBuilder()
             .maximumSize(40) // 最大40件
             .softValues() // ソフトリファレンス

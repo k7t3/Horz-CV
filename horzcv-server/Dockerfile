@@ -36,7 +36,7 @@ WORKDIR ${JETTY_BASE}
 # Add modules as needed, e.g., jsp, jstl, websocket, etc.
 RUN java -jar ${JETTY_HOME}/start.jar --create-startd \
     --approve-all-licenses \
-    --add-module=server,http,deploy,logging-logback
+    --add-module=server,http,deploy,ee10-cdi,logging-logback,jmx
 # Note: logging-log4j2 provides a common logging setup, adjust if needed.
 
 # ---
@@ -52,8 +52,12 @@ ENV JETTY_BASE=${JETTY_BASE}
 ENV PATH=$JETTY_HOME/bin:$PATH
 ENV JETTY_PORT=8080
 ENV TZ=Asia/Tokyo
+ENV JFR_DIR=${JETTY_BASE}/jfr-recordings
 
 WORKDIR ${JETTY_BASE}
+
+# JFR用ディレクトリの作成
+RUN mkdir -p ${JFR_DIR}
 
 # Install runtime dependencies (like tzdata if timezone is set)
 RUN apk add --no-cache tzdata
@@ -66,17 +70,16 @@ RUN addgroup -S jetty && \
 COPY --from=builder ${JETTY_HOME} ${JETTY_HOME}
 COPY --from=builder ${JETTY_BASE} ${JETTY_BASE}
 
-# --- Application Deployment ---
-# Uncomment and adjust the following line to copy your web application
-# COPY --chown=jetty:jetty your-application.war ${JETTY_BASE}/webapps/root.war
-# Or copy an exploded webapp directory:
-# COPY --chown=jetty:jetty your-webapp-dir ${JETTY_BASE}/webapps/root/
-# -----------------------------
+# Application Deployment
+COPY --chown=jetty:jetty build/tomcat/webapps/ROOT ${JETTY_BASE}/webapps/root/
 
 # Set ownership and permissions for the Jetty directories
 # Ensure the jetty user can write to logs, tmp, etc. within JETTY_BASE
 RUN chown -R jetty:jetty ${JETTY_BASE} && \
     chmod -R g+w ${JETTY_BASE}
+
+# JFRファイル用のボリュームを定義
+VOLUME ${JFR_DIR}
 
 # Switch to the non-root user
 USER jetty
@@ -85,4 +88,4 @@ USER jetty
 EXPOSE ${JETTY_PORT}
 
 # Define the command to start Jetty
-CMD ["java", "-Dlogback.configurationFile=${JETTY_BASE}/resources/logback.xml", "-jar", "/usr/local/jetty/start.jar"]
+CMD java -XX:StartFlightRecording=name=continuous,filename=${JFR_DIR}/recording.jfr,settings=profile,maxage=7d,maxsize=1g,dumponexit=true,disk=true -Dlogback.configurationFile=${JETTY_BASE}/resources/logback.xml -jar /usr/local/jetty/start.jar

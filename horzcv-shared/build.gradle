@@ -11,7 +11,8 @@ java {
     withSourcesJar()
 
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        // クライアントのJavaバージョンに制限があるためそれに合わせる
+        languageVersion = JavaLanguageVersion.of(clientJavaVersion)
     }
 }
 
