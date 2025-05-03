@@ -16,7 +16,6 @@
 
 package io.github.k7t3.horzcv.client.presenter;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.storage.client.Storage;
 import io.github.k7t3.horzcv.client.model.LiveStreaming;
 import io.github.k7t3.horzcv.client.model.LiveStreamingDetector;
@@ -29,7 +28,6 @@ import io.github.k7t3.horzcv.client.view.Routes;
 import io.github.k7t3.horzcv.client.view.Slots;
 import io.github.k7t3.horzcv.client.view.Tokens;
 import io.github.k7t3.horzcv.client.view.ui.LiveStreamingFormViewImpl;
-import io.github.k7t3.horzcv.shared.service.StreamerInfoService;
 import io.github.k7t3.horzcv.shared.service.StreamerInfoServiceAsync;
 import org.dominokit.domino.api.client.annotations.presenter.*;
 import org.dominokit.domino.api.client.mvp.presenter.ViewablePresenter;
@@ -57,7 +55,10 @@ public class HomePresenter extends ViewablePresenter<HomeView>
 
     private static final int MAX_LIVE_STREAMING_FORMS = 8;
 
-    private final StreamerInfoServiceAsync streamerInfoService = GWT.create(StreamerInfoService.class);
+    // FIXME: 一時的にバックエンドサービスを使用しないように変更。
+    private final StreamerInfoServiceAsync streamerInfoService = (url, callback) -> {
+        // no-op
+    };
 
     private final List<LiveStreamingDetector> detectors;
 
