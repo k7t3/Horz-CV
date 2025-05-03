@@ -8,11 +8,6 @@ group = 'io.github.k7t3'
 version = '1.0-SNAPSHOT'
 
 configurations {
-    // Additional configurations each holding a single zip file with
-    // the corresponding GWT compiler output.
-    gwtJsZipFile
-    gwtDeployZipFile
-
     // 共通ライブラリのソース用構成
     sharedSource
 }
@@ -108,7 +103,7 @@ gwt {
 
     superDev {
         // サーバーモジュールのアプリケーションディレクトリを対象にする
-        launcherDir = project(':horzcv-server').layout.buildDirectory.dir('tomcat/webapps/app')
+        launcherDir = project(':horzcv-server').layout.buildDirectory.dir('tomcat/webapps/ROOT')
     }
 
     // Optional: Configures the GWT test runner
@@ -125,30 +120,7 @@ gwt {
 // サーバーのテスト用Tomcatディレクトリに反映するタスク
 tasks.register('gwtClientResources', Sync) {
     from gwtCompile.war
-    into project(':horzcv-server').layout.buildDirectory.dir('tomcat/webapps/app')
-}
-
-// Zip task to package GWT JS output
-tasks.register("zipGwtJs", Zip) {
-    dependsOn("gwtCompile")
-    from (gwt.war)
-    destinationDirectory = layout.buildDirectory.dir('gwt')
-    archiveBaseName = "${project.name}-js"
-}
-
-// Zip task to package GWT deploy output
-tasks.register("zipGwtDeploy", Zip) {
-    dependsOn("gwtCompile")
-    from (gwt.deploy)
-    destinationDirectory = layout.buildDirectory.dir('gwt')
-    archiveBaseName = "${project.name}-deploy"
-}
-
-// Add each zip file as artifact to its corresponding configuration.
-// These can then be consumed by other projects.
-artifacts {
-    gwtJsZipFile tasks.named("zipGwtJs")
-    gwtDeployZipFile tasks.named("zipGwtDeploy")
+    into project(':horzcv-server').layout.buildDirectory.dir('tomcat/webapps/ROOT')
 }
 
 // コンパイル後にアプリケーションに必要な静的ファイルをコピーする処理をフック

@@ -37,7 +37,7 @@
 
     <entry-point class="io.github.k7t3.horzcv.client.HorzCVApp" />
 
-    <!-- Only support recent browsers -->
+    <!-- Gecko, WebKitエンジンサポート -->
     <set-property name="user.agent" value="gecko1_8,safari" />
 
 </module>
