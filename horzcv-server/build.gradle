@@ -1,0 +1,65 @@
+plugins {
+    // https://plugins.gradle.org/plugin/com.github.sahara3.tomcat-runner
+    id 'war'
+    id 'com.github.sahara3.tomcat-runner' version '0.3.0'
+}
+
+group = 'io.github.k7t3'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(serverJavaVersion)
+    }
+}
+
+tomcat {
+    // See https://tomcat.apache.org/whichversion.html
+    // for which version of Tomcat to use for which version of Servlet API
+    version = '11.0.2'
+    port = 8080
+
+    webapp(project) {
+        contextPath = '' // root context
+    }
+}
+
+tomcatRun {
+    dependsOn ':horzcv-client:gwtClientResources'
+}
+
+dependencies {
+    implementation project(':horzcv-shared')
+
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$servletVersion"
+
+    // Weld CDI
+    implementation 'org.jboss.weld.servlet:weld-servlet-core:6.0.2.Final'
+
+    // Cache
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.0'
+
+    // Google API: Youtube Data API, Firestore
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev20250128-2.0.0'
+    implementation 'com.google.api-client:google-api-client-jackson2:2.7.2'
+
+    // Twitch
+    implementation 'com.github.twitch4j:twitch4j:1.24.0'
+
+    // Logging SLF4J
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "org.slf4j:slf4j-jdk-platform-logging:$slf4jVersion"
+
+    // Logging Implementation
+    implementation 'ch.qos.logback:logback-classic:1.5.18'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.15.2'
+    testImplementation 'org.eclipse.jetty.ee10:jetty-ee10-servlet:12.0.16'
+}
+
+test {
+    useJUnitPlatform()
+}

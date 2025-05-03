@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "build/gwt/js",
+    "public": "horzcv-client/build/gwt/js",
     "ignore": [
       "firebase.json",
       "**/.*"

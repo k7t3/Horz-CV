@@ -1,2 +1,6 @@
 rootProject.name = 'Horz-CV'
 
+
+include 'horzcv-client'
+include 'horzcv-shared'
+include 'horzcv-server'

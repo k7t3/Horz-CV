@@ -1,0 +1,45 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'io.github.k7t3'
+version = '1.0-SNAPSHOT'
+
+java {
+    // ソースコードを成果物とするタスクを生成
+    // task: sourcesJar
+    withSourcesJar()
+
+    toolchain {
+        // クライアントのJavaバージョンに制限があるためそれに合わせる
+        languageVersion = JavaLanguageVersion.of(clientJavaVersion)
+    }
+}
+
+dependencies {
+    api 'org.gwtproject:gwt-servlet-jakarta:2.12.2'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+configurations {
+    // ソースを成果物とする構成
+    sources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+tasks.named('jar') {
+    dependsOn 'sourcesJar'
+}
+
+artifacts {
+    // ソースJarを成果物とする
+    sources(tasks.sourcesJar)
+}
